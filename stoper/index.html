@@ -4,61 +4,7 @@
 
 	<title>KLASY</title>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <style>
-        body{
-            width: 100%;
-            height: 100%;
-            
-        }
-        #timer{
-            width: 200px;
-            height: 500px;
-            left: 42%;
-            position: absolute;
-            text-align: center;
-        }
-        p{
-            letter-spacing: 3em;
-              margin-left: 32px;
-        }
-        #plus{
-            width: 30px;
-            height: 30px;
-            margin-left: 8px;
-            margin-right: 8px;
-        }
-        #licznik{
-             display: inline-block;
-            margin-left: 5px;
-            text-align: center;
-            font-size: 50px;
-            
-        }
-        #licznik :not(:last-child):after{
-            content: ':';
-        }
-        #odlicz{
-            width: 40px;
-            height: 40px;
-        }
-        #minusy{
-            margin-left: 15px;
-        }
-        #minus{
-            width: 30px;
-            height: 30px;
-            margin-left: 8px;
-            margin-right: 8px;
-        }
-        button{
-            padding: 0;
-            border: 2px solid;
-            background: none;
-            margin: 3px;
-            width: 70px;
-            height: 30px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -66,152 +12,140 @@
         <h1>TIMER</h1>
         <p>GMS</p>
         <div id="pola">
-        <input id="plus" type="image" src="plus.png" name="saveForm" class="btTxt submit" onclick="addOneH()" />
-            <input id="plus" type="image" src="plus.png" name="saveForm" class="btTxt submit" onclick="addOneM()" />
-            <input id="plus" type="image" src="plus.png" name="saveForm" class="btTxt submit" onclick="addOneS()" />
+        <input type="image" src="plus.png" name="hours" class="btTxt submit plus"/>
+            <input type="image" src="plus.png" name="minutes" class="btTxt submit plus" />
+            <input type="image" src="plus.png" name="seconds" class="btTxt submit plus" />
             
             <div id="licznik">
-        <span id="godziny">00</span><span id="minuty">00</span><span id="sekundy">00</span>
+        <span id="hours">00</span><span id="minutes">00</span><span id="seconds">00</span>
                  </div>
             <div id="minusy">  
-             <input id="minus" type="image" src="minus.png" name="saveForm" class="btTxt submit" onclick="minusOneH()" />
-            <input id="minus" type="image" src="minus.png" name="saveForm" class="btTxt submit" onclick="minusOneM()" />
-            <input id="minus" type="image" src="minus.png" name="saveForm" class="btTxt submit" onclick="minusOneS()" />
+             <input type="image" src="minus.png" name="hours" class="btTxt submit minus" />
+            <input type="image" src="minus.png" name="minutes" class="btTxt submit minus"/>
+            <input type="image" src="minus.png" name="seconds" class="btTxt submit minus"/>
                 </div>  
         
         </div>
         <div id="przyciski">
             
-            <button id="startstop" onclick="startstop()">START</button>
+            <button id="startstop">START</button>
             <br>
-            <button id="reset" onclick="reset()">RESET</button>
+            <button id="reset">RESET</button>
         
         </div>    
     </div>
-    <script>
-    var time = 0;
-    var running = 0;
-    var mins  = 0;
-    var secs = 0;
-    var hours = 0;
-        function startstop() {
-            if (running==0){
-                running = 1;
-            document.getElementById('startstop').innerHTML="STOP";
-            }else{
-                running = 0;
-                document.getElementById('startstop').innerHTML="START";
-                clearInterval(timer());
-            }
-        }
-        function reset(){
-            running = 0;
-            hours = 0;
-            mins = 0;
-            secs = 0;
-            document.getElementById("godziny").innerHTML = "00";
-            document.getElementById("minuty").innerHTML = "00";
-            document.getElementById("sekundy").innerHTML = "00";
-            
-            
-        }
-      
-            if (running==1){
-             var timer = setInterval(function(){
-                    var fHours = Math.floor((hours % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    var minutes = Math.floor((mins % (1000 * 60 * 60)) / (1000 * 60));
-                    var secconds = Math.floor((secs % (1000 * 60)) / 1000);
-                    if (mins <10){
-                        document.getElementById("godziny").innerHTML = "0"+minutes;
+    <script >
+        var isRunning = false;
+var time = {
+    minutes: 0,
+    seconds: 0,
+    hours: 0
+};
+var x;
+var btn = document.getElementById('startstop');
 
-                    }
-                    if (secs <10){
-                        document.getElementById("godziny").innerHTML = "0"+ secconds;
-                    }
-                    if (hours <10){
-                       document.getElementById("godziny").innerHTML = "0"+fHours;
-                    }
-                    document.getElementById("godziny").innerHTML = fHours;
-                    document.getElementById("minuty").innerHTML = minutes;
-                    document.getElementById("sekundy").innerHTML = secconds;
-                    
-                    
-                },1000);
+var elements = {
+    hours: document.getElementById("hours"),
+    minutes: document.getElementById("minutes"),
+    seconds: document.getElementById("seconds")
+}
+
+var btn = document.getElementById('startstop');
+var resetBtn = document.getElementById('reset');
+var minusy = document.querySelectorAll('.minus');
+var plusy = document.querySelectorAll('.plus');
+
+function button() {
+    btn.textContent = isRunning ? "START" : "STOP";
+    btn.classList.toggle('active');
+}
+
+
+function updateTime(units = Object.keys(time)) {
+    for (const unit of units) {
+        elements[unit].textContent = `${time[unit]}`.padStart(2, '0');
+    }
+}
+
+function reset() {
+    clearInterval(x);
+
+    time = {
+        minutes: 0,
+        seconds: 0,
+        hours: 0
+    };
+
+    updateTime();
+    isRunning && button();
+    isRunning = false;
+    
+}
+
+function add(unit) {
+    if (unit !== 'hours') {
+        if (time[unit] > 58) return;
+    }
+    time[unit]++;
+    updateTime([unit]);
+}
+
+function minus(unit) {
+    if (time[unit] < 1) return;
+    time[unit]--;
+    updateTime([unit]);
+}
+
+function startstop() {
+    var today = new Date().getTime();
+    var to = new Date(today + (time.seconds * 1000 + time.minutes * 60000 + time.hours * 3600000)).getTime();
+    
+    button();
+
+    if (!isRunning) {
+        x = setInterval(function () {
+            document.body.style.backgroundColor = "white";
+            today = new Date().getTime()
+            var odstep = 1000 + to - today;
+            /*document.getElementById("hours").disabled = true;
+            document.getElementById("minutes").disabled = true;
+            document.getElementById("seconds").disabled = true;*/
+            updateTime();
+
+            time.hours = Math.floor((odstep % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            time.minutes = Math.floor((odstep % (1000 * 60 * 60)) / (1000 * 60));
+            time.seconds = Math.floor((odstep % (1000 * 60)) / 1000);
+
+            updateTime();
+
+            if (odstep <= 1000) {
+                reset();
+                document.body.style.backgroundColor = "red";
             }
-        function addOneH(){
-            hours+=1;
-             if (hours < 10){
-                bPlusOneH = document.getElementById("godziny").innerHTML= "0"+hours;
-                }else if (hours > 99){
-                    hours = 99;
-                } else{
-                bPlusOneH = document.getElementById("godziny").innerHTML= hours;
-                }
-           
-            
-        }
-            function addOneM(){
-            mins+=1;
-            if (mins <10){
-                bPlusOneM = document.getElementById("minuty").innerHTML= "0"+mins;
-                }else if (mins > 59){
-                    mins = 59;
-                } else{
-                    bPlusOneM = document.getElementById("minuty").innerHTML= mins;
-                }
-           
-            
-        }
-                function addOneS(){
-           secs+=1;
-            if (secs <10){
-                bPlusOneS = document.getElementById("sekundy").innerHTML= "0"+secs;
-                }else if (secs > 59){
-                    secs = 59;
-                } else{
-                    bPlusOneS = document.getElementById("sekundy").innerHTML= secs;
-                }
-           
-            
-        }
-        function minusOneH(){
-            hours-=1;
-            if (hours <0){
-                hours = 0;
-            }    
-                
-            else if(hours <10){
-                bMinusOneH = document.getElementById("godziny").innerHTML= "0"+hours;
-                }else{
-                bMinusOneH = document.getElementById("godziny").innerHTML= hours;
-                }
-            }
-            function minusOneM(){
-            mins-=1;
-            if (mins <0){
-                mins = 0;
-            }     
-            else if (mins <10){
-                bMinusOneM = document.getElementById("minuty").innerHTML= "0"+mins;
-                }else{
-                    bMinusOneM = document.getElementById("minuty").innerHTML= mins;
-                }
-           
-            
-        }
-                function minusOneS(){
-                secs-=1;
-            if (secs <0){
-                secs = 0;
-            }    
-                
-            else if(secs <10){
-                bMinusOneS = document.getElementById("sekundy").innerHTML= "0"+secs;
-                }
-                else{
-                 bMinusOneS = document.getElementById("sekundy").innerHTML= secs;
-                }
-                }
+        }, 1000);
+        isRunning = true;
+    } else {
+        clearInterval(x);
+        isRunning = false;
+    }
+    
+}
+
+minusy.forEach(function(minusEle) {
+    minusEle.addEventListener('click', function() {
+        minus(minusEle.name);
+    });
+});
+
+plusy.forEach(function(plus) {
+    plus.addEventListener('click', function() {
+        add(plus.name);
+    });
+});
+
+btn.addEventListener('click', startstop);
+resetBtn.addEventListener('click', reset);
+   
     </script>
 </body> 
 </html>
