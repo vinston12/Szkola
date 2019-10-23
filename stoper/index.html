@@ -12,17 +12,17 @@
         <h1>TIMER</h1>
         <p>GMS</p>
         <div id="pola">
-        <input type="image" src="plus.png" name="hours" class="btTxt submit plus"/>
-            <input type="image" src="plus.png" name="minutes" class="btTxt submit plus" />
-            <input type="image" src="plus.png" name="seconds" class="btTxt submit plus" />
+        <input type="image" id="hoursP" src="plus.png" name="hours" class="btTxt submit plus"/>
+            <input type="image" id="minutesP" src="plus.png" name="minutes" class="btTxt submit plus" />
+            <input type="image" id="secondsP" src="plus.png" name="seconds" class="btTxt submit plus" />
             
             <div id="licznik">
         <span id="hours">00</span><span id="minutes">00</span><span id="seconds">00</span>
                  </div>
             <div id="minusy">  
-             <input type="image" src="minus.png" name="hours" class="btTxt submit minus" />
-            <input type="image" src="minus.png" name="minutes" class="btTxt submit minus"/>
-            <input type="image" src="minus.png" name="seconds" class="btTxt submit minus"/>
+             <input type="image" id="hours" src="minus.png" name="hours" class="btTxt submit minus" />
+            <input type="image" id="minutes" src="minus.png" name="minutes" class="btTxt submit minus"/>
+            <input type="image" id="seconds" src="minus.png" name="seconds" class="btTxt submit minus"/>
                 </div>  
         
         </div>
@@ -34,9 +34,8 @@
         
         </div>    
     </div>
-<<<<<<< HEAD
-    <script >
-        var isRunning = false;
+    <script>
+var isRunning = false;
 var time = {
     minutes: 0,
     seconds: 0,
@@ -80,7 +79,6 @@ function reset() {
     updateTime();
     isRunning && button();
     isRunning = false;
-    
 }
 
 function add(unit) {
@@ -98,19 +96,20 @@ function minus(unit) {
 }
 
 function startstop() {
+   
     var today = new Date().getTime();
     var to = new Date(today + (time.seconds * 1000 + time.minutes * 60000 + time.hours * 3600000)).getTime();
     
     button();
 
     if (!isRunning) {
+        zmienna = false;
+       
         x = setInterval(function () {
-            document.body.style.backgroundColor = "white";
+           document.body.style.backgroundColor = "white";
             today = new Date().getTime()
             var odstep = 1000 + to - today;
-            /*document.getElementById("hours").disabled = true;
-            document.getElementById("minutes").disabled = true;
-            document.getElementById("seconds").disabled = true;*/
+            
             updateTime();
 
             time.hours = Math.floor((odstep % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -121,17 +120,17 @@ function startstop() {
 
             if (odstep <= 1000) {
                 reset();
-                document.body.style.backgroundColor = "red";
+                 document.body.style.backgroundColor = "red";
             }
         }, 1000);
         isRunning = true;
     } else {
         clearInterval(x);
         isRunning = false;
+        zmienna = true;
     }
     
 }
-
 minusy.forEach(function(minusEle) {
     minusEle.addEventListener('click', function() {
         minus(minusEle.name);
@@ -143,135 +142,9 @@ plusy.forEach(function(plus) {
         add(plus.name);
     });
 });
-
 btn.addEventListener('click', startstop);
 resetBtn.addEventListener('click', reset);
-   
-=======
-    <script>
-    var time = 0;
-    var running = 0;
-    var mins  = 0;
-    var secs = 0;
-    var hours = 0;
-    var today = new Date().getTime();
-    var to = new Date(today+(secs*1000+mins*60000+hours*3600000)).getTime();
-    var odstep  = to-today;  
-        function startstop() {
-            if (running==0){
-                running = 1;
-            document.getElementById('startstop').innerHTML="STOP";
-                if (running==1){
-                
-                 var x = setInterval(function(){
-               
-                var fHours =  Math.floor((odstep % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                var fMinutes = Math.floor((odstep % (1000 * 60 * 60)) / (1000 * 60));
-                var fSeconds = Math.floor((odstep % (1000 * 60)) / 1000);
-
-                     document.getElementById('godziny').innerHTML = `${fHours}`.padStart(2,'0');
-                     document.getElementById('minuty').innerHTML = `${fMinutes}`.padStart(2,'0');
-                     document.getElementById('sekundy').innerHTML = `${fSeconds}`.padStart(2,'0');
-
-                       
-                   },1000);    
-                 }
-            }
             
-         if (odstep <0){
-                clearInterval(x);
-            }
-        }
-        function reset(){
-            running = 0;
-            hours = 0;
-            mins = 0;
-            secs = 0;
-            document.getElementById("godziny").innerHTML = "00";
-            document.getElementById("minuty").innerHTML = "00";
-            document.getElementById("sekundy").innerHTML = "00";
-            
-            
-        }
-      
-          
-        function addOneH(){
-            hours+=1;
-             if (hours < 10){
-                bPlusOneH = document.getElementById("godziny").innerHTML= "0"+hours;
-                }else if (hours > 99){
-                    hours = 99;
-                } else{
-                bPlusOneH = document.getElementById("godziny").innerHTML= hours;
-                }
-           
-            
-        }
-            function addOneM(){
-            mins+=1;
-            if (mins <10){
-                bPlusOneM = document.getElementById("minuty").innerHTML= "0"+mins;
-                }else if (mins > 59){
-                    mins = 59;
-                } else{
-                    bPlusOneM = document.getElementById("minuty").innerHTML= mins;
-                }
-           
-            
-        }
-                function addOneS(){
-           secs+=1;
-            if (secs <10){
-                bPlusOneS = document.getElementById("sekundy").innerHTML= "0"+secs;
-                }else if (secs > 59){
-                    secs = 59;
-                } else{
-                    bPlusOneS = document.getElementById("sekundy").innerHTML= secs;
-                }
-           
-            
-        }
-        function minusOneH(){
-            hours-=1;
-            if (hours <0){
-                hours = 0;
-            }    
-                
-            else if(hours <10){
-                bMinusOneH = document.getElementById("godziny").innerHTML= "0"+hours;
-                }else{
-                bMinusOneH = document.getElementById("godziny").innerHTML= hours;
-                }
-            }
-            function minusOneM(){
-            mins-=1;
-            if (mins <0){
-                mins = 0;
-            }     
-            else if (mins <10){
-                bMinusOneM = document.getElementById("minuty").innerHTML= "0"+mins;
-                }else{
-                    bMinusOneM = document.getElementById("minuty").innerHTML= mins;
-                }
-           
-            
-        }
-                function minusOneS(){
-                secs-=1;
-            if (secs <0){
-                secs = 0;
-            }    
-                
-            else if(secs <10){
-                bMinusOneS = document.getElementById("sekundy").innerHTML= "0"+secs;
-                }
-                else{
-                 bMinusOneS = document.getElementById("sekundy").innerHTML= secs;
-                }
-                }
-            
-            
->>>>>>> 074ea495b3f2fbc04c741153319ba42215fb6c02
     </script>
 </body> 
 </html>
