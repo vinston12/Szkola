@@ -77,11 +77,22 @@ function reset() {
     };
 
     updateTime();
-    isRunning && button();
+    if (isRunning) {
+      button();
+    minusy.forEach(function(minusEle) {
+      minusEle.addEventListener('click', minus);
+    });
+
+    plusy.forEach(function(plus) {
+      plus.addEventListener('click', add);
+    });
+    }
     isRunning = false;
+     document.body.style.backgroundColor = "white";
 }
 
-function add(unit) {
+function add(event) {
+  const unit = event.target.name;
     if (unit !== 'hours') {
         if (time[unit] > 58) return;
     }
@@ -89,27 +100,35 @@ function add(unit) {
     updateTime([unit]);
 }
 
-function minus(unit) {
+function minus(event) {
+    const unit = event.target.name;
     if (time[unit] < 1) return;
     time[unit]--;
     updateTime([unit]);
 }
 
 function startstop() {
-   
+    minusy.forEach(function(minusEle) {
+      minusEle.removeEventListener('click', minus);
+    });
+
+    plusy.forEach(function(plus) {
+      plus.removeEventListener('click', add);
+    });
     var today = new Date().getTime();
     var to = new Date(today + (time.seconds * 1000 + time.minutes * 60000 + time.hours * 3600000)).getTime();
     
     button();
 
     if (!isRunning) {
-        zmienna = false;
        
         x = setInterval(function () {
            document.body.style.backgroundColor = "white";
             today = new Date().getTime()
             var odstep = 1000 + to - today;
-            
+            time.hours = Math.floor((odstep % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            time.minutes = Math.floor((odstep % (1000 * 60 * 60)) / (1000 * 60));
+            time.seconds = Math.floor((odstep % (1000 * 60)) / 1000);
             updateTime();
 
             time.hours = Math.floor((odstep % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -127,24 +146,26 @@ function startstop() {
     } else {
         clearInterval(x);
         isRunning = false;
-        zmienna = true;
-    }
-    
-}
-minusy.forEach(function(minusEle) {
-    minusEle.addEventListener('click', function() {
-        minus(minusEle.name);
-    });
+      minusy.forEach(function(minusEle) {
+    minusEle.addEventListener('click', minus);
 });
 
 plusy.forEach(function(plus) {
-    plus.addEventListener('click', function() {
-        add(plus.name);
-    });
+    plus.addEventListener('click', add);
+});
+    }
+    
+}
+	    
+minusy.forEach(function(minusEle) {
+    minusEle.addEventListener('click', minus);
+});
+
+plusy.forEach(function(plus) {
+    plus.addEventListener('click', add);
 });
 btn.addEventListener('click', startstop);
 resetBtn.addEventListener('click', reset);
-            
     </script>
 </body> 
 </html>
