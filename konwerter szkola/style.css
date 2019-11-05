@@ -1,0 +1,41 @@
+html{
+    height: 100%;
+    width: 100%;
+}
+body{
+    height: 100%;
+    width: 100%;
+}
+.main{
+    
+    height: 50%;
+    background: rebeccapurple;
+    font-size: 20px;
+   
+}
+.left{
+     float: left;
+}
+.right {
+    float: right;
+}
+.menu {
+  
+}
+h1 {
+    font-size: 70px;
+    text-align: center;
+}
+input {
+    
+}
+button{
+background-color: floralwhite; /* Green */
+  border: none;
+  color: rebeccapurple;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+}
